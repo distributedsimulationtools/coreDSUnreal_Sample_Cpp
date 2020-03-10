@@ -136,7 +136,7 @@ void AFirstPersonShootCPPGameMode::printErrorDelegate(FString Message, int Error
 // ObjectName is the unique object identifier
 void  AFirstPersonShootCPPGameMode::gunUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
 {
-//	spawnActorBasedOntype(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun")::StaticClass(), Values, ObjectName);
+	spawnActorBasedOntype(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun")::StaticClass(), Values, ObjectName);
 }
 
 void  AFirstPersonShootCPPGameMode::bulletUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
