@@ -69,13 +69,9 @@ void AFirstPersonShootCPPProjectile::Tick(float DeltaTime)
 	FVector ActorLocation = GetRootComponent()->GetComponentLocation();
 	FRotator ActorRotation = GetRootComponent()->GetComponentRotation();
 
-	lValues.Add(FPairValue("Location.X", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.Y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.Z", FString::SanitizeFloat(ActorLocation.Z)));
-
-	lValues.Add(FPairValue("Orientation.X", FString::SanitizeFloat(ActorRotation.Pitch)));
-	lValues.Add(FPairValue("Orientation.Y", FString::SanitizeFloat(ActorRotation.Yaw)));
-	lValues.Add(FPairValue("Orientation.Z", FString::SanitizeFloat(ActorRotation.Roll)));
+	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
+	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
+	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
 
 	//The first argument is the object type, followed a unique identifier, then the values
 	UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Bullet", lValues);

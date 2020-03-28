@@ -136,24 +136,24 @@ void AFirstPersonShootCPPGameMode::printErrorDelegate(FString Message, int Error
 // ObjectName is the unique object identifier
 void  AFirstPersonShootCPPGameMode::gunUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
 {
-	spawnActorBasedOntype(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun")::StaticClass(), Values, ObjectName);
+	spawnActorBasedOntype(DefaultPawnClass, Values, ObjectName);
 }
 
 void  AFirstPersonShootCPPGameMode::bulletUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
 {
-	spawnActorBasedOntype(AFirstPersonShootCPPProjectile::StaticClass(), Values, ObjectName);
+	spawnActorBasedOntype(Cast<AFirstPersonShootCPPCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->ProjectileClass, Values, ObjectName);
 }
 
 void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> ActorType, const TArray< FPairValue > &Values, FString ObjectName)
 {
 	//extract the values
-	const FPairValue *lX = Values.FindByKey("Location.X");
-	const FPairValue *lY = Values.FindByKey(FString("Location.Y"));
-	const FPairValue *lZ = Values.FindByKey(FString("Location.Z"));
+	const FPairValue *lX = Values.FindByKey("Location.x");
+	const FPairValue *lY = Values.FindByKey("Location.y");
+	const FPairValue *lZ = Values.FindByKey("Location.z");
 
-	const FPairValue *lPitch = Values.FindByKey(FString("Orientation.pitch"));
-	const FPairValue *lYaw = Values.FindByKey(FString("Orientation.yaw"));
-	const FPairValue *lRoll = Values.FindByKey(FString("Orientation.roll"));
+	const FPairValue *lPitch = Values.FindByKey("Orientation.pitch");
+	const FPairValue *lYaw = Values.FindByKey("Orientation.yaw");
+	const FPairValue *lRoll = Values.FindByKey("Orientation.roll");
 
 	//check if we have all valid values
 	if (!(lX && lY && lZ))
@@ -164,7 +164,7 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 	FVector lNewLocation(FCString::Atof(*lX->Value), FCString::Atof(*lY->Value), FCString::Atof(*lZ->Value));
 
 	FRotator lRot(0,0,0);
-	if ((lPitch && lYaw && lRoll))
+	if (lPitch && lYaw && lRoll)
 	{
 		lRot = FRotator(FCString::Atof(*lPitch->Value), FCString::Atof(*lYaw->Value), FCString::Atof(*lRoll->Value));
 	}
@@ -180,20 +180,21 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 		{
 			//we need to add the tag before the object is created to prevent a ping-pong effect
 			lActor->Tags.Add("coreDSCreated");
-			UGameplayStatics::FinishSpawningActor(lActor, lTransform);
-		}
 
-		if (IsValid(lActor))
-		{
-			lActor->SetActorEnableCollision(false);
-			lActor->DisableComponentsSimulatePhysics();
-
-			//check if the object was already discovered
-			if (!mDiscoveredObject.Contains(ObjectName))
+			if (IsValid(lActor))
 			{
-				//spawn the object
-				mDiscoveredObject.Emplace(ObjectName, lActor);
+				lActor->SetActorEnableCollision(false);
+				lActor->DisableComponentsSimulatePhysics();
+
+				//check if the object was already discovered
+				if (!mDiscoveredObject.Contains(ObjectName))
+				{
+					//spawn the object
+					mDiscoveredObject.Emplace(ObjectName, lActor);
+				}
 			}
+
+			UGameplayStatics::FinishSpawningActor(lActor, lTransform);
 		}
 	}
 	else
@@ -212,7 +213,7 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 void  AFirstPersonShootCPPGameMode::shotFiredMessageReceived(const  TArray< FPairValue > &Values)
 {
 	//find the Character instance so we can play the fire sound
-	AFirstPersonShootCPPCharacter* myCharacter = Cast<AFirstPersonShootCPPCharacter>(this);
+	AFirstPersonShootCPPCharacter* myCharacter = Cast<AFirstPersonShootCPPCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
 	// try and play the sound if specified
 	if (myCharacter != NULL && myCharacter->FireSound != NULL)
@@ -228,7 +229,8 @@ void  AFirstPersonShootCPPGameMode::objectRemoved(FString ObjectName)
 		AActor *lActor = mDiscoveredObject[ObjectName];
 
 		//remove the object from the scene
-		if (lActor && lActor->IsValidLowLevel() || !lActor->IsActorBeingDestroyed() || !lActor->IsPendingKill())
+		if (lActor && lActor->IsValidLowLevel() || !lActor->IsActorBeingDestroyed() || !lActor->IsPendingKill() || !lActor->IsPendingKillOrUnreachable()
+			|| !lActor->IsPendingKillPending())
 		{
 			lActor->MarkPendingKill();
 		}

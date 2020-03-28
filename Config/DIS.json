@@ -29,7 +29,7 @@
       "EnableTimeConstrained" : false,
       "EnableTimeRegulation" : false,
       "FOMFileList" : [
-         "D:\\Program Files\\Epic Games\\UE_4.22\\Engine\\Plugins\\coreDSModule\\Binaries\\Win64\\/DIS_V6_IEEE_1278.1a-1998.xml"
+         "D:\\Program Files\\Epic Games\\UE_4.24\\Engine\\Plugins\\coreDSModule\\Binaries\\Win64\\/DIS_V6_IEEE_1278.1a-1998.xml"
       ],
       "FederateName" : "",
       "FederateType" : "",
@@ -111,13 +111,13 @@
                      "On Data Received" : "convertPositionFromDIS.lua"
                   },
                   {
-                     "X" : "Location.X"
+                     "X" : "Location.x"
                   },
                   {
-                     "Y" : "Location.Y"
+                     "Y" : "Location.y"
                   },
                   {
-                     "Z" : "Location.Z"
+                     "Z" : "Location.z"
                   }
                ]
             }
@@ -218,13 +218,13 @@
                      "On Data Updated" : "convertUnrealPositionToDIS.lua"
                   },
                   {
-                     "X" : "Location.X"
+                     "X" : "Location.x"
                   },
                   {
-                     "Y" : "Location.Y"
+                     "Y" : "Location.y"
                   },
                   {
-                     "Z" : "Location.Z"
+                     "Z" : "Location.z"
                   }
                ]
             },
@@ -340,13 +340,13 @@
                      "On Data Received" : "convertPositionFromDIS.lua"
                   },
                   {
-                     "X" : "Location.X"
+                     "X" : "Location.x"
                   },
                   {
-                     "Y" : "Location.Y"
+                     "Y" : "Location.y"
                   },
                   {
-                     "Z" : "Location.Z"
+                     "Z" : "Location.z"
                   }
                ]
             }
@@ -373,13 +373,13 @@
                      "On Data Received" : "convertPositionFromDIS.lua"
                   },
                   {
-                     "X" : "Location.X"
+                     "X" : "Location.x"
                   },
                   {
-                     "Y" : "Location.Y"
+                     "Y" : "Location.y"
                   },
                   {
-                     "Z" : "Location.Z"
+                     "Z" : "Location.z"
                   }
                ]
             },
@@ -392,13 +392,13 @@
                      "On Data Received" : "convertOrientationFromDIS.lua"
                   },
                   {
-                     "Phi" : "Orientation.Z"
+                     "Phi" : "Orientation.pitch"
                   },
                   {
-                     "Psi" : "Orientation.X"
+                     "Psi" : "Orientation.yaw"
                   },
                   {
-                     "Theta" : "Orientation.Y"
+                     "Theta" : "Orientation.roll"
                   }
                ]
             }
@@ -569,13 +569,13 @@
                      "On Data Updated" : "convertUnrealPositionToDIS.lua"
                   },
                   {
-                     "X" : "Location.X"
+                     "X" : "Location.x"
                   },
                   {
-                     "Y" : "Location.Y"
+                     "Y" : "Location.y"
                   },
                   {
-                     "Z" : "Location.Z"
+                     "Z" : "Location.z"
                   }
                ]
             },
@@ -783,13 +783,13 @@
                      "On Data Updated" : "convertUnrealPositionToDIS.lua"
                   },
                   {
-                     "X" : "Location.X"
+                     "X" : "Location.x"
                   },
                   {
-                     "Y" : "Location.Y"
+                     "Y" : "Location.y"
                   },
                   {
-                     "Z" : "Location.Z"
+                     "Z" : "Location.z"
                   }
                ]
             },
@@ -825,13 +825,13 @@
                      "On Data Updated" : "convertOrientationToDIS.lua"
                   },
                   {
-                     "Phi" : "Orientation.Z"
+                     "Phi" : "Orientation.pitch"
                   },
                   {
-                     "Psi" : "Orientation.X"
+                     "Psi" : "Orientation.yaw"
                   },
                   {
-                     "Theta" : "Orientation.Y"
+                     "Theta" : "Orientation.roll"
                   }
                ]
             }

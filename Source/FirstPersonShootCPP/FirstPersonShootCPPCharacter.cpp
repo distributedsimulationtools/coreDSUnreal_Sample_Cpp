@@ -37,7 +37,7 @@ AFirstPersonShootCPPCharacter::AFirstPersonShootCPPCharacter()
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
+	//Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
@@ -46,7 +46,7 @@ AFirstPersonShootCPPCharacter::AFirstPersonShootCPPCharacter()
 
 	// Create a gun mesh component
 	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
-	FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
+	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
 	FP_Gun->bCastDynamicShadow = false;
 	FP_Gun->CastShadow = false;
 	// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
@@ -72,7 +72,7 @@ AFirstPersonShootCPPCharacter::AFirstPersonShootCPPCharacter()
 	// Create a gun and attach it to the right-hand VR controller.
 	// Create a gun mesh component
 	VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
-	VR_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
+	//VR_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
 	VR_Gun->bCastDynamicShadow = false;
 	VR_Gun->CastShadow = false;
 	VR_Gun->SetupAttachment(R_MotionController);
@@ -212,9 +212,9 @@ void AFirstPersonShootCPPCharacter::OnFire()
 		ActorLocation  = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 	}
 	
-	lValues.Add(FPairValue("Location.X", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.Y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.Z", FString::SanitizeFloat(ActorLocation.Z)));
+	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
+	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
+	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
 
 	UcoreDSBluePrintBPLibrary::sendMessage("ShotFired", lValues);
 }
@@ -349,13 +349,13 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 	FVector ActorLocation = GetActorLocation();
 	FRotator ActorRotation = GetActorRotation();
 
-	lValues.Add(FPairValue("Location.X", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.Y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.Z", FString::SanitizeFloat(ActorLocation.Z)));
+	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
+	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
+	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
 
-	lValues.Add(FPairValue("Orientation.X", FString::SanitizeFloat(ActorRotation.Pitch)));
-	lValues.Add(FPairValue("Orientation.Y", FString::SanitizeFloat(ActorRotation.Yaw)));
-	lValues.Add(FPairValue("Orientation.Z", FString::SanitizeFloat(ActorRotation.Roll)));
+	lValues.Add(FPairValue("Orientation.pitch", FString::SanitizeFloat(ActorRotation.Pitch)));
+	lValues.Add(FPairValue("Orientation.yaw", FString::SanitizeFloat(ActorRotation.Yaw)));
+	lValues.Add(FPairValue("Orientation.roll", FString::SanitizeFloat(ActorRotation.Roll)));
 
 	//The first argument is the object type, followed a unique identifier, then the values
 	UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Gun", lValues);
