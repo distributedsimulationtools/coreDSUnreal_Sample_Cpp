@@ -23,10 +23,14 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	//Callback when an object is deleted from the scene by Unreal
+	void objectDeletedFromLevel(AActor* DeletedActor);
 private:
 
 	//List of discovered entities
 	TMap<FString, AActor*> mDiscoveredObject;
+	TMap<AActor*, FString> mDiscoveredObjectRev;
+	FCriticalSection mDiscoveredObjectMutex;
 
 	UFUNCTION()
 		void printErrorDelegate(FString Message, int Errorcode);
@@ -45,6 +49,7 @@ private:
 
 	//Helper function to spawn objects
 	void  spawnActorBasedOntype(TSubclassOf<AActor> ActorType, const TArray< FPairValue > &Values, FString ObjectName);
+	FDelegateHandle OnLevelActorDeletedHandle;
 };
 
 

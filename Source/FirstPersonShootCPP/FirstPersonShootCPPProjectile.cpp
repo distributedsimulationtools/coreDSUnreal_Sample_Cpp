@@ -79,12 +79,12 @@ void AFirstPersonShootCPPProjectile::Tick(float DeltaTime)
 
 void AFirstPersonShootCPPProjectile::Destroyed()
 {
-	Super::Destroyed();
-
 	// If the object was not created by coreDS Unreal (ie, this is a locally created object)
 	// Delete it
 	if (!ActorHasTag("coreDSCreated"))
 	{
 		UcoreDSBluePrintBPLibrary::deleteObject(GetFName().ToString());
 	}
+
+	Super::Destroyed();
 }

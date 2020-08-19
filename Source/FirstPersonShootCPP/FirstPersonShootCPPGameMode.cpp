@@ -68,12 +68,18 @@ AFirstPersonShootCPPGameMode::AFirstPersonShootCPPGameMode()
 
 	// enable tick
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 void AFirstPersonShootCPPGameMode::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	//Add a callback to be aware when a coreDS based entities is being deleted by Unreal
+	//GEngine->OnLevelActorDeleted().Add(&AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
+	//GEngine->OnLevelActorDeleted().Add(this, &AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
+	OnLevelActorDeletedHandle = GEngine->OnLevelActorDeleted().AddUObject(this, &AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
 
 	// coreDS Unreal
 	UcoreDSBluePrintBPLibrary::connect();
@@ -144,6 +150,17 @@ void  AFirstPersonShootCPPGameMode::bulletUpdated(const  TArray< FPairValue > &V
 	spawnActorBasedOntype(Cast<AFirstPersonShootCPPCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->ProjectileClass, Values, ObjectName);
 }
 
+void AFirstPersonShootCPPGameMode::objectDeletedFromLevel(AActor* DeletedActor)
+{
+	FScopeLock lock(&mDiscoveredObjectMutex);
+
+	if (mDiscoveredObjectRev.Contains(DeletedActor))
+	{
+		mDiscoveredObject.Remove(mDiscoveredObjectRev[DeletedActor]);
+		mDiscoveredObjectRev.Remove(DeletedActor);
+	}
+}
+
 void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> ActorType, const TArray< FPairValue > &Values, FString ObjectName)
 {
 	//extract the values
@@ -172,6 +189,9 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 	FTransform lTransform(lRot, lNewLocation);
 
 	AActor *lActor = NULL;
+	
+	FScopeLock lock(&mDiscoveredObjectMutex);
+
 	if (!mDiscoveredObject.Contains(ObjectName))
 	{
 		//not yet discovered
@@ -191,6 +211,7 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 				{
 					//spawn the object
 					mDiscoveredObject.Emplace(ObjectName, lActor);
+					mDiscoveredObjectRev.Emplace(lActor, ObjectName);
 				}
 			}
 
@@ -204,6 +225,7 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 
 		if (IsValid(lActor))
 		{
+			//make sure the object is within the scene, otherwise it will get destroyed
 			lActor->SetActorLocationAndRotation(lNewLocation, lRot, false, nullptr, ETeleportType::ResetPhysics);
 		}
 	}
@@ -224,6 +246,8 @@ void  AFirstPersonShootCPPGameMode::shotFiredMessageReceived(const  TArray< FPai
 
 void  AFirstPersonShootCPPGameMode::objectRemoved(FString ObjectName)
 {
+	FScopeLock lock(&mDiscoveredObjectMutex);
+
 	if (mDiscoveredObject.Contains(ObjectName))
 	{
 		AActor *lActor = mDiscoveredObject[ObjectName];
@@ -236,6 +260,7 @@ void  AFirstPersonShootCPPGameMode::objectRemoved(FString ObjectName)
 		}
 
 		mDiscoveredObject.Remove(ObjectName);
+		mDiscoveredObjectRev.Remove(lActor);
 	}
 }
 

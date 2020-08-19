@@ -103,7 +103,7 @@ This sample comes with some preconfigured settings:
 
 Let's take a look at each configuration.
 
-### DIS
+## DIS
 For both configurations, it is important to configure the Configured Network Adapter. Click on the dropbox and select your active Network Adapter.
 
 ![Plugin DISConnectionConfiguration Screenshot](/Doc/Images/DISConnectionConfiguration.png)
@@ -194,7 +194,7 @@ Finally, we are sending coordinates in local format, which DIS doesn't like. We 
 
 As for outgoing values, you must set a conversion script to convert from the local coordinates to geocentric coordinates. Scripts are located in /Config/Scripts. 
 
-### HLA
+## HLA
 For both configurations, it is important to have a valid FOM File. The sample provides an RPRFOM 2.0 compliant FOM file, located in /Config. Altought this sample is configured to use an RPRFOM based FOM file, you can load the FOM file of your choice. 
 
 ![Plugin HLAConnectionConfiguration Screenshot](/Doc/Images/HLAConnectionConfiguration.png)
@@ -417,7 +417,7 @@ Finally, we can define the function
 void  AFirstPersonShootCPPGameMode::objectRemoved(FString ObjectName)
 ```
 
-#Blueprint locations
+# Blueprint locations
 Everything related to receiving objects and messages(interactions) are located in FirstPersonShootCPPGameMode.cpp.
 
 Logic related to sending the GUN location is within FirstPersonShootCPPCharacter.cpp.
