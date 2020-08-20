@@ -5,10 +5,11 @@
       "DISAppNumber" : 3002,
       "DISDestinationAddress" : "192.168.1.255",
       "DISDisVer" : 6,
+      "DISEnableExpertMode" : false,
       "DISExerciseID" : 1,
       "DISJoinMulticastGroup" : false,
       "DISMulticastAddress" : "0.0.0.0",
-      "DISNIA" : "192.168.1.218",
+      "DISNIA" : "192.168.1.76",
       "DISPort" : 3000,
       "DISRcvBuffSize" : 2048,
       "DISSiteNumber" : 1,
@@ -29,7 +30,7 @@
       "EnableTimeConstrained" : false,
       "EnableTimeRegulation" : false,
       "FOMFileList" : [
-         "D:\\Program Files\\Epic Games\\UE_4.24\\Engine\\Plugins\\coreDSModule\\Binaries\\Win64\\/DIS_V6_IEEE_1278.1a-1998.xml"
+         "D:\\Program Files\\Epic Games\\UE_4.22\\Engine\\Plugins\\coreDSModule\\Binaries\\Win64\\/DIS_V6_IEEE_1278.1a-1998.xml"
       ],
       "FederateName" : "",
       "FederateType" : "",
@@ -392,13 +393,13 @@
                      "On Data Received" : "convertOrientationFromDIS.lua"
                   },
                   {
-                     "Phi" : "Orientation.pitch"
+                     "Phi" : "Orientation.yaw"
                   },
                   {
-                     "Psi" : "Orientation.yaw"
+                     "Psi" : "Orientation.roll"
                   },
                   {
-                     "Theta" : "Orientation.roll"
+                     "Theta" : "Orientation.pitch"
                   }
                ]
             }
@@ -825,13 +826,13 @@
                      "On Data Updated" : "convertOrientationToDIS.lua"
                   },
                   {
-                     "Phi" : "Orientation.pitch"
+                     "Phi" : "Orientation.yaw"
                   },
                   {
-                     "Psi" : "Orientation.yaw"
+                     "Psi" : "Orientation.roll"
                   },
                   {
-                     "Theta" : "Orientation.roll"
+                     "Theta" : "Orientation.pitch"
                   }
                ]
             }

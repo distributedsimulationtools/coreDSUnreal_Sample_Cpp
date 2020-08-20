@@ -43,26 +43,26 @@
       "MinimumCallbackTime" : 0.0,
       "ObjectPublishList" : [
          {
-            "Attributes" : [ "Spatial" ],
-            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+            "Attributes" : [ "EntityType", "Spatial" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform"
          },
          {
-            "Attributes" : [ "Spatial" ],
+            "Attributes" : [ "EntityType", "Spatial" ],
             "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
          }
       ],
       "ObjectSubcribeList" : [
          {
-            "Attributes" : [ "Spatial" ],
-            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+            "Attributes" : [ "EntityType", "Spatial" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform"
          },
          {
-            "Attributes" : [ "Spatial" ],
+            "Attributes" : [ "EntityType", "Spatial" ],
             "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
          }
       ],
       "RegisterSynchronizationPoint" : false,
-      "RequestAttributeValuesUpdate" : true,
+      "RequestAttributeValuesUpdate" : false,
       "ResignAction" : "Delete Objects",
       "StartAtGALT" : false,
       "SynchronizationPointName" : "SyncPoint",
@@ -146,7 +146,7 @@
    },
    "ObjectLinkSimLocalIn" : [
       {
-         "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [ "Gun" ]
+         "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform" : [ "Gun" ]
       },
       {
          "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition" : [ "Bullet" ]
@@ -157,14 +157,14 @@
          "Bullet" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
       },
       {
-         "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+         "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform"
       }
    ],
    "ObjectMappingIn" : [
       {
-         "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [
+         "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform" : [
             {
-               "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : "Gun"
+               "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform" : "Gun"
             },
             {
                "Spatial" : [
@@ -172,13 +172,13 @@
                      "On Data Received" : "convertPositionFromHLA.lua"
                   },
                   {
-                     "Orientation.Phi" : "Orientation.pitch"
+                     "Orientation.Phi" : "Orientation.yaw"
                   },
                   {
-                     "Orientation.Psi" : "Orientation.yaw"
+                     "Orientation.Psi" : "Orientation.roll"
                   },
                   {
-                     "Orientation.Theta" : "Orientation.roll"
+                     "Orientation.Theta" : "Orientation.pitch"
                   },
                   {
                      "WorldLocation.X" : "Location.x"
@@ -224,6 +224,34 @@
                "Bullet" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
             },
             {
+               "EntityType" : [
+                  {
+                     "Category" : "1"
+                  },
+                  {
+                     "CountryCode" : "1"
+                  },
+                  {
+                     "Domain" : "1"
+                  },
+                  {
+                     "EntityKind" : "2"
+                  },
+                  {
+                     "Extra" : "1"
+                  },
+                  {
+                     "Specific" : "1"
+                  },
+                  {
+                     "Subcategory" : "1"
+                  }
+               ]
+            },
+            {
+               "Bullet" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
+            },
+            {
                "Spatial" : [
                   {
                      "DeadReckoningAlgorithm" : "Static"
@@ -259,7 +287,35 @@
       {
          "Gun" : [
             {
-               "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+               "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform"
+            },
+            {
+               "EntityType" : [
+                  {
+                     "Category" : "1"
+                  },
+                  {
+                     "CountryCode" : "3"
+                  },
+                  {
+                     "Domain" : "2"
+                  },
+                  {
+                     "EntityKind" : "3"
+                  },
+                  {
+                     "Extra" : "0"
+                  },
+                  {
+                     "Specific" : "0"
+                  },
+                  {
+                     "Subcategory" : "1"
+                  }
+               ]
+            },
+            {
+               "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform"
             },
             {
                "Spatial" : [
@@ -273,13 +329,13 @@
                      "On Data Updated" : "convertUnrealPositionToHLA.lua"
                   },
                   {
-                     "Orientation.Phi" : "Orientation.pitch"
+                     "Orientation.Phi" : "Orientation.yaw"
                   },
                   {
-                     "Orientation.Psi" : "Orientation.yaw"
+                     "Orientation.Psi" : "Orientation.roll"
                   },
                   {
-                     "Orientation.Theta" : "Orientation.roll"
+                     "Orientation.Theta" : "Orientation.pitch"
                   },
                   {
                      "WorldLocation.X" : "Location.x"
@@ -296,8 +352,8 @@
       }
    ],
    "RTIConfiguration" : {
-      "Compiler" : "VC140",
-      "DLLName" : "DLC_1516e_VC140_x64.dll",
+      "Compiler" : "VC141",
+      "DLLName" : "DLC_1516e_VC141_x64.dll",
       "LocalDesignatorsExtra" : "",
       "Manufacturer" : "DLC",
       "OverEncDecFOM" : "",
