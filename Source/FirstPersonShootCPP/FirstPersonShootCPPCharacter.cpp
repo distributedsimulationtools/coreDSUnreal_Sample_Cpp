@@ -87,7 +87,7 @@ AFirstPersonShootCPPCharacter::AFirstPersonShootCPPCharacter()
 	//bUsingMotionControllers = true;
 	
 	//coreDS Reduce the tick requency so we don't flood the network
-	PrimaryActorTick.TickInterval = 1.0f;
+	PrimaryActorTick.TickInterval = 10.0f;
 }
 
 void AFirstPersonShootCPPCharacter::BeginPlay()
@@ -349,13 +349,20 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 	FVector ActorLocation = GetActorLocation();
 	FRotator ActorRotation = GetActorRotation();
 
-	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
+	//only send update if all fields are valid
+	if (!ActorLocation.ContainsNaN() && !ActorRotation.ContainsNaN())
+	{
+		lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
+		lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
+		lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
 
-	lValues.Add(FPairValue("Orientation.pitch", FString::SanitizeFloat(ActorRotation.Pitch)));
-	lValues.Add(FPairValue("Orientation.yaw", FString::SanitizeFloat(ActorRotation.Yaw)));
-	lValues.Add(FPairValue("Orientation.roll", FString::SanitizeFloat(ActorRotation.Roll)));
+		lValues.Add(FPairValue("Orientation.pitch", FString::SanitizeFloat(ActorRotation.Pitch)));
+		lValues.Add(FPairValue("Orientation.yaw", FString::SanitizeFloat(ActorRotation.Yaw)));
+		lValues.Add(FPairValue("Orientation.roll", FString::SanitizeFloat(ActorRotation.Roll)));
+
+		//The first argument is the object type, followed a unique identifier, then the values
+		UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Gun", lValues);
+	}
 
 	//The first argument is the object type, followed a unique identifier, then the values
 	UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Gun", lValues);
