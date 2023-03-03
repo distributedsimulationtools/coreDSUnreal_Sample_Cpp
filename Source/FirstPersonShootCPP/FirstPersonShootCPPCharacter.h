@@ -7,6 +7,7 @@
 #include "FirstPersonShootCPPCharacter.generated.h"
 
 class UInputComponent;
+class UcoreDSEngine;
 
 UCLASS(config=Game)
 class AFirstPersonShootCPPCharacter : public ACharacter
@@ -47,6 +48,7 @@ class AFirstPersonShootCPPCharacter : public ACharacter
 
 public:
 	AFirstPersonShootCPPCharacter();
+	UcoreDSEngine *Engine;
 
 protected:
 	virtual void BeginPlay();

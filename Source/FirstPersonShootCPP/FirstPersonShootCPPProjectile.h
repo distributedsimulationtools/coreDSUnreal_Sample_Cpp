@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "FirstPersonShootCPPProjectile.generated.h"
 
+//Forward declaration to the UcoreDSEngine class
+class UcoreDSEngine;
+
 UCLASS(config=Game)
 class AFirstPersonShootCPPProjectile : public AActor
 {
@@ -22,9 +25,14 @@ class AFirstPersonShootCPPProjectile : public AActor
 public:
 	AFirstPersonShootCPPProjectile();
 
+	//Pointer to the coreDS engine
+	UcoreDSEngine *Engine;
+
 	/** called when projectile hits something */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	virtual void BeginPlay() override;
 
 	/** Returns CollisionComp subobject **/
 	FORCEINLINE class USphereComponent* GetCollisionComp() const { return CollisionComp; }

@@ -1,8 +1,8 @@
 # coreUnrealCPP
 
-This is a Sample project to be used with [coreDS Unreal](https://www.ds.tools/products/hla-dis-unreal-engine-4/) and the [Unreal Engine 4](https://www.unrealengine.com). You can request a free trial on https://www.ds.tools/contact-us/trial-request/
+This is a Sample project to be used with [coreDS Unreal](https://www.ds.tools/products/hla-dis-unreal-engine-4/) and the [Unreal Engine 4 and 5](https://www.unrealengine.com). You can request a free trial on https://www.ds.tools/contact-us/trial-request/
 
-coreDS Unreal must already be installed and activated in order to use this project. The project is compatible with the latest UE4 release. Please make sure the coreDS Unreal plugin is enabled.
+coreDS Unreal must already be installed and activated in order to use this project. The project is compatible with the Unreal engine 4.24+ and 5.0+. Please make sure the coreDS Unreal plugin is enabled.
 
 This sample focuses on using the C++ instead of the BluePrint visual programming language. No matter what you will need the UE4 Editor at some point to manage the configuration file. The base project is the FirstPersonShooter sample, C++ mode, provided by Epic Games.
 
@@ -299,13 +299,13 @@ When using HLA, if this is the first call using that object type, registerObject
 When using DIS, an EntityStatePDU will be sent.
 
 ```c++
-	TArray< FPairValue > lValues;
+	TArray< FKeyVariantPair > lValues;
 
-	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
+	lValues.Add(FKeyVariantPair("Location.x", ActorLocation.X));
+	lValues.Add(FKeyVariantPair("Location.y", ActorLocation.Y));
+	lValues.Add(FKeyVariantPair("Location.z", ActorLocation.Z));
 
-	UcoreDSBluePrintBPLibrary::updateObject("Bullet", lValues);
+	UcoreDSEngine::updateObject("Bullet", lValues);
 ```
 
 ## Send Message (send a MunitionDetonationPDU or SendInteraction)
@@ -318,13 +318,13 @@ When using DIS, a FirePDU will be sent.
 ```c++
 	// coreDS Unreal
 	// Send the WeaponFire message
-	TArray< FPairValue > lValues;
+	TArray< FKeyVariantPair > lValues;
 
-	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
+	lValues.Add(FKeyVariantPair("Location.x", ActorLocation.X));
+	lValues.Add(FKeyVariantPair("Location.y", ActorLocation.Y));
+	lValues.Add(FKeyVariantPair("Location.z", ActorLocation.Z));
 
-	UcoreDSBluePrintBPLibrary::sendMessage("ShotFired", lValues);
+	UcoreDSEngine::sendMessage("ShotFired", lValues);
 ```
 
 
@@ -348,7 +348,7 @@ UcoreDSEngine::registerObjectUpdateHandler("Gun", lObjectUpdateHandlerForGuns);
 3) Define and fill the "gunUpdated" function. Values are received in a list of value-pair. Each pair consists of the value name, as defined in the mapping and the value as a string. ObjectName is the unique object identifier
 
 ```c++	
-void  AFirstPersonShootCPPGameMode::gunUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
+void  AFirstPersonShootCPPGameMode::gunUpdated(const TArray< FKeyVariantPair > &Values, FString ObjectName)
 {
 	...
 }
@@ -375,7 +375,7 @@ If you want to receive a message, you must first register a MessageReceivedHandl
 
 ```c++
 //Play a sound when the ShotFired message is received
-void  AFirstPersonShootCPPGameMode::shotFiredMessageReceived(const  TArray< FPairValue > &Values)
+void  AFirstPersonShootCPPGameMode::shotFiredMessageReceived(const  TArray< FKeyVariantPair > &Values)
 {
 	//find the Character instance so we can play the fire sound
 	AFirstPersonShootCPPCharacter* myCharacter = Cast<AFirstPersonShootCPPCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());

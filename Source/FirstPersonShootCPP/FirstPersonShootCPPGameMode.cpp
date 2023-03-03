@@ -10,7 +10,7 @@
 //coreDS Unreal
 #include "coreDSSettingsClass.h"
 #include "coreDSEngine.h"
-#include "coreDSBluePrintBPLibrary.h"
+#include "coreDS_BPCoordinateConversion.h"
 
 AFirstPersonShootCPPGameMode::AFirstPersonShootCPPGameMode()
 	: Super()
@@ -76,13 +76,15 @@ void AFirstPersonShootCPPGameMode::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	Engine = GetGameInstance()->GetSubsystem<UcoreDSEngine>();
+
 	//Add a callback to be aware when a coreDS based entities is being deleted by Unreal
 	//GEngine->OnLevelActorDeleted().Add(&AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
 	//GEngine->OnLevelActorDeleted().Add(this, &AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
 	OnLevelActorDeletedHandle = GEngine->OnLevelActorDeleted().AddUObject(this, &AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
 
 	// coreDS Unreal
-	UcoreDSBluePrintBPLibrary::connect();
+	Engine->connect();
 	
 	//create our delegates that will handle received informations from the distributed simulation backend
 
@@ -109,18 +111,18 @@ void AFirstPersonShootCPPGameMode::BeginPlay()
 
 	//register the required callbacks to received information for HLA or DIS
 	///Register a callback to report an error
-	UcoreDSEngine::registerErrorReceivedHandler(lErrorHandler);
+	Engine->registerErrorReceivedHandler(lErrorHandler);
 
 	///Register a callback to an update object event
-	UcoreDSEngine::registerObjectUpdateHandler("Gun", lObjectUpdateHandlerForGuns);
-	UcoreDSEngine::registerObjectUpdateHandler("Bullet", lObjectUpdateHandlerForBullets);
+	Engine->registerObjectUpdateHandler("Gun", lObjectUpdateHandlerForGuns);
+	Engine->registerObjectUpdateHandler("Bullet", lObjectUpdateHandlerForBullets);
 
 	///Register a callback to an object removed
-	UcoreDSEngine::registerObjectRemovedHandler("Gun", lObjectRemovedHandler);
-	UcoreDSEngine::registerObjectRemovedHandler("Bullet", lObjectRemovedHandler);
+	Engine->registerObjectRemovedHandler("Gun", lObjectRemovedHandler);
+	Engine->registerObjectRemovedHandler("Bullet", lObjectRemovedHandler);
 
 	///Register a callback to a message is received
-	UcoreDSEngine::registerMessageUpdateHandler("ShotFired", lMessageUpdateHandlerWeaponFire);
+	Engine->registerMessageUpdateHandler("ShotFired", lMessageUpdateHandlerWeaponFire);
 }
 
 void AFirstPersonShootCPPGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -129,7 +131,7 @@ void AFirstPersonShootCPPGameMode::EndPlay(const EEndPlayReason::Type EndPlayRea
 	Super::EndPlay(EndPlayReason);
 
 	// coreDS Unreal
-	UcoreDSBluePrintBPLibrary::disconnect();
+	Engine->disconnect();
 }
 
 void AFirstPersonShootCPPGameMode::printErrorDelegate(FString Message, int Errorcode)
@@ -140,12 +142,12 @@ void AFirstPersonShootCPPGameMode::printErrorDelegate(FString Message, int Error
 
 // Values are received in a list of value-pair. Each pair consists of the value name, as defined in the mapping and the value as a string
 // ObjectName is the unique object identifier
-void  AFirstPersonShootCPPGameMode::gunUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
+void  AFirstPersonShootCPPGameMode::gunUpdated(FCoreDSVariant Values, FString ObjectName)
 {
 	spawnActorBasedOntype(DefaultPawnClass, Values, ObjectName);
 }
 
-void  AFirstPersonShootCPPGameMode::bulletUpdated(const  TArray< FPairValue > &Values, FString ObjectName)
+void  AFirstPersonShootCPPGameMode::bulletUpdated(FCoreDSVariant Values, FString ObjectName)
 {
 	spawnActorBasedOntype(Cast<AFirstPersonShootCPPCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->ProjectileClass, Values, ObjectName);
 }
@@ -161,30 +163,37 @@ void AFirstPersonShootCPPGameMode::objectDeletedFromLevel(AActor* DeletedActor)
 	}
 }
 
-void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> ActorType, const TArray< FPairValue > &Values, FString ObjectName)
+void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> ActorType, FCoreDSVariant Values, FString ObjectName)
 {
-	//extract the values
-	const FPairValue *lX = Values.FindByKey("Location.x");
-	const FPairValue *lY = Values.FindByKey("Location.y");
-	const FPairValue *lZ = Values.FindByKey("Location.z");
-
-	const FPairValue *lPitch = Values.FindByKey("Orientation.pitch");
-	const FPairValue *lYaw = Values.FindByKey("Orientation.yaw");
-	const FPairValue *lRoll = Values.FindByKey("Orientation.roll");
-
 	//check if we have all valid values
-	if (!(lX && lY && lZ))
+	if (!Values.exists("Location.x") || !Values.exists("Location.y") || !Values.exists("Location.z"))
 	{
 		printErrorDelegate("Missing values when receiving data - please check your mapping", 0);
 		return;
 	}
-	FVector lNewLocation(FCString::Atof(*lX->Value), FCString::Atof(*lY->Value), FCString::Atof(*lZ->Value));
 
 	FRotator lRot(0,0,0);
-	if (lPitch && lYaw && lRoll)
+	if (Values.exists("Orientation.pitch") && Values.exists("Orientation.yaw") && Values.exists("Orientation.roll"))
 	{
-		lRot = FRotator(FCString::Atof(*lPitch->Value), FCString::Atof(*lYaw->Value), FCString::Atof(*lRoll->Value));
+		lRot = FRotator(Values["Orientation.pitch"].toDouble(), Values["Orientation.yaw"].toDouble(), Values["Orientation.roll"].toDouble());
 	}
+
+	//UE_LOG(LogClass, Log, TEXT("coreDS: Received position %g, %g, %g"), Values["Location.x"].toFloat(), Values["Location.y"].toFloat(), Values["Location.z"].toFloat());
+
+	float xEnu = 0, yEnu = 0, zEnu = 0;
+	float pitch = 0, roll = 0, yaw = 0;
+	UcoreDSSettings* lSettings = const_cast<UcoreDSSettings*>(GetDefault<UcoreDSSettings>());
+	UCoreDSCoordinateConversion::EcefToEnu_float(Values["Location.x"].toFloat(), Values["Location.y"].toFloat(), Values["Location.z"].toFloat(), 
+		xEnu, yEnu, zEnu, 
+		roll, pitch, yaw, 
+		lRot.Pitch, lRot.Roll, lRot.Yaw, 
+		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
+
+	lRot = FRotator(pitch, yaw, roll);
+	FVector lNewLocation(xEnu, yEnu, zEnu);
+
+	//UE_LOG(LogClass, Log, TEXT("coreDS: Converted location %g, %g, %g"), xEnu, yEnu, zEnu);
+
 
 	FTransform lTransform(lRot, lNewLocation);
 
@@ -216,6 +225,17 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 			}
 
 			UGameplayStatics::FinishSpawningActor(lActor, lTransform);
+
+			if (IsValid(lActor))
+			{
+				FString lFinaleName = ObjectName;
+				lFinaleName.Append(" (coreDS)");
+				lActor->SetActorLabel(lFinaleName);
+			}
+			else
+			{
+				printErrorDelegate("Could not create actor", 0);
+			}
 		}
 	}
 	else
@@ -232,7 +252,7 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 }
 
 //Play a sound when the ShotFired message is received
-void  AFirstPersonShootCPPGameMode::shotFiredMessageReceived(const  TArray< FPairValue > &Values)
+void  AFirstPersonShootCPPGameMode::shotFiredMessageReceived(FCoreDSVariant Values)
 {
 	//find the Character instance so we can play the fire sound
 	AFirstPersonShootCPPCharacter* myCharacter = Cast<AFirstPersonShootCPPCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
@@ -268,5 +288,5 @@ void  AFirstPersonShootCPPGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	UcoreDSBluePrintBPLibrary::step();
+	Engine->step();
 }

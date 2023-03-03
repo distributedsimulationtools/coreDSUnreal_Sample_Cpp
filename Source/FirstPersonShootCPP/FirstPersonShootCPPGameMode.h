@@ -7,6 +7,7 @@
 
 //coreDS Unreal
 #include "coreDSBluePrintBPLibrary.h"
+#include "coreDS_BPVariant.h"
 
 #include "FirstPersonShootCPPGameMode.generated.h"
 
@@ -36,20 +37,22 @@ private:
 		void printErrorDelegate(FString Message, int Errorcode);
 
 	UFUNCTION()
-		void gunUpdated(const  TArray< FPairValue > &Values, FString ObjectName);
+		void gunUpdated(FCoreDSVariant Values, FString ObjectName);
 
 	UFUNCTION()
-		void bulletUpdated(const  TArray< FPairValue > &Values, FString ObjectName);
+		void bulletUpdated(FCoreDSVariant Values, FString ObjectName);
 
 	UFUNCTION()
-		void shotFiredMessageReceived(const  TArray< FPairValue > &Values);
+		void shotFiredMessageReceived(FCoreDSVariant Values);
 
 	UFUNCTION()
 		void objectRemoved(FString ObjectName);
 
 	//Helper function to spawn objects
-	void  spawnActorBasedOntype(TSubclassOf<AActor> ActorType, const TArray< FPairValue > &Values, FString ObjectName);
+	void  spawnActorBasedOntype(TSubclassOf<AActor> ActorType, FCoreDSVariant Values, FString ObjectName);
 	FDelegateHandle OnLevelActorDeletedHandle;
+
+	UcoreDSEngine *Engine;
 };
 
 

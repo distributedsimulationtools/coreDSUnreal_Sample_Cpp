@@ -7,7 +7,8 @@
 #include "Containers/Array.h"
 
 //coreDS Unreal include
-#include "coreDSBluePrintBPLibrary.h"
+#include "coreDSEngine.h"
+#include "coreDS_BPCoordinateConversion.h"
 
 AFirstPersonShootCPPProjectile::AFirstPersonShootCPPProjectile() 
 {
@@ -41,6 +42,14 @@ AFirstPersonShootCPPProjectile::AFirstPersonShootCPPProjectile()
 
 }
 
+void AFirstPersonShootCPPProjectile::BeginPlay()
+{
+	// Call the base class  
+	Super::BeginPlay();
+
+	Engine = GetGameInstance()->GetSubsystem<UcoreDSEngine>();
+}
+
 void AFirstPersonShootCPPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
@@ -64,17 +73,26 @@ void AFirstPersonShootCPPProjectile::Tick(float DeltaTime)
 
 	//coreDS Unreal
 	//Send a message on hit
-	TArray< FPairValue > lValues;
+	TArray< FKeyVariantPair > lValues;
 
 	FVector ActorLocation = GetRootComponent()->GetComponentLocation();
 	FRotator ActorRotation = GetRootComponent()->GetComponentRotation();
 
-	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
+	float x = 0, y = 0, z = 0;
+	float psi = 0, theta = 0, phi = 0;
+	UcoreDSSettings* lSettings = const_cast<UcoreDSSettings*>(GetDefault<UcoreDSSettings>());
+	UCoreDSCoordinateConversion::EnuToEcef_float(ActorLocation.X, ActorLocation.Y, ActorLocation.Z,
+		x, y, z,
+		psi, theta, phi,
+		ActorRotation.Roll, ActorRotation.Pitch, ActorRotation.Yaw,
+		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
+
+	lValues.Add(FKeyVariantPair("Location.x", x));
+	lValues.Add(FKeyVariantPair("Location.y", y));
+	lValues.Add(FKeyVariantPair("Location.z", z));
 
 	//The first argument is the object type, followed a unique identifier, then the values
-	UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Bullet", lValues);
+	Engine->updateObject(GetFName().ToString(), "Bullet", lValues);
 }
 
 void AFirstPersonShootCPPProjectile::Destroyed()
@@ -83,7 +101,7 @@ void AFirstPersonShootCPPProjectile::Destroyed()
 	// Delete it
 	if (!ActorHasTag("coreDSCreated"))
 	{
-		UcoreDSBluePrintBPLibrary::deleteObject(GetFName().ToString());
+		Engine->removeObject(TCHAR_TO_UTF8(*GetFName().ToString()));
 	}
 
 	Super::Destroyed();

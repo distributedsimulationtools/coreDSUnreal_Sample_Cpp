@@ -13,7 +13,8 @@
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
 //coreDS Unreal include
-#include "coreDSBluePrintBPLibrary.h"
+#include "coreDSEngine.h"
+#include "coreDS_BPCoordinateConversion.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -87,13 +88,15 @@ AFirstPersonShootCPPCharacter::AFirstPersonShootCPPCharacter()
 	//bUsingMotionControllers = true;
 	
 	//coreDS Reduce the tick requency so we don't flood the network
-	PrimaryActorTick.TickInterval = 10.0f;
+	PrimaryActorTick.TickInterval = 1.0f;
 }
 
 void AFirstPersonShootCPPCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	Engine = GetGameInstance()->GetSubsystem<UcoreDSEngine>();
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
@@ -199,7 +202,7 @@ void AFirstPersonShootCPPCharacter::OnFire()
 
 	//coreDS Unreal
 	//Send a message on hit
-	TArray< FPairValue > lValues;
+	TArray< FKeyVariantPair > lValues;
 	FVector ActorLocation;
 	if (bUsingMotionControllers)
 	{
@@ -212,11 +215,20 @@ void AFirstPersonShootCPPCharacter::OnFire()
 		ActorLocation  = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 	}
 	
-	lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
-	lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
-	lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
+	float x = 0, y = 0, z = 0;
+	float psi = 0, theta = 0, phi = 0;
+	UcoreDSSettings* lSettings = const_cast<UcoreDSSettings*>(GetDefault<UcoreDSSettings>());
+	UCoreDSCoordinateConversion::EnuToEcef_float(ActorLocation.X, ActorLocation.Y, ActorLocation.Z,
+		x, y, z,
+		psi, theta, phi,
+		0,0,0,
+		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
 
-	UcoreDSBluePrintBPLibrary::sendMessage("ShotFired", lValues);
+	lValues.Add(FKeyVariantPair("Location.x", x));
+	lValues.Add(FKeyVariantPair("Location.y", y));
+	lValues.Add(FKeyVariantPair("Location.z", z));
+
+	Engine->sendMessage("ShotFired", lValues);
 }
 
 void AFirstPersonShootCPPCharacter::OnResetVR()
@@ -344,7 +356,7 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 
 	//coreDS Unreal
 	//Send a message on hit
-	TArray< FPairValue > lValues;
+	TArray< FKeyVariantPair > lValues;
 
 	FVector ActorLocation = GetActorLocation();
 	FRotator ActorRotation = GetActorRotation();
@@ -352,20 +364,38 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 	//only send update if all fields are valid
 	if (!ActorLocation.ContainsNaN() && !ActorRotation.ContainsNaN())
 	{
-		lValues.Add(FPairValue("Location.x", FString::SanitizeFloat(ActorLocation.X)));
-		lValues.Add(FPairValue("Location.y", FString::SanitizeFloat(ActorLocation.Y)));
-		lValues.Add(FPairValue("Location.z", FString::SanitizeFloat(ActorLocation.Z)));
+		//UE_LOG(LogClass, Log, TEXT("coreDS: Sent actor position %f, %f, %f"), ActorLocation.X, ActorLocation.Y, ActorLocation.Z);
+		
+		float x = 0, y = 0, z = 0;
+		float psi = 0, theta = 0, phi = 0;
+		UcoreDSSettings* lSettings = const_cast<UcoreDSSettings*>(GetDefault<UcoreDSSettings>());
+		UCoreDSCoordinateConversion::EnuToEcef_float(ActorLocation.X, ActorLocation.Y, ActorLocation.Z, 
+			x, y, z, 
+			psi, theta, phi, 
+			ActorRotation.Roll, ActorRotation.Pitch, ActorRotation.Yaw,
+			lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
 
-		lValues.Add(FPairValue("Orientation.pitch", FString::SanitizeFloat(ActorRotation.Pitch)));
-		lValues.Add(FPairValue("Orientation.yaw", FString::SanitizeFloat(ActorRotation.Yaw)));
-		lValues.Add(FPairValue("Orientation.roll", FString::SanitizeFloat(ActorRotation.Roll)));
+		lValues.Add(FKeyVariantPair("Location.x", x));
+		lValues.Add(FKeyVariantPair("Location.y", y));
+		lValues.Add(FKeyVariantPair("Location.z", z));
+
+		lValues.Add(FKeyVariantPair("Orientation.pitch", psi));
+		lValues.Add(FKeyVariantPair("Orientation.yaw", phi));
+		lValues.Add(FKeyVariantPair("Orientation.roll", theta));
+		
+		/*
+		UE_LOG(LogClass, Log, TEXT("coreDS: Sent actor position ENU %f, %f, %f"), x, y, z);
+
+		float x1 = 0, y1 = 0, z1 = 0;
+		float psi1 = 0, theta1 = 0, phi1 = 0;
+		UCoreDSCoordinateConversion::EcefToEnu_float(x, y, z, x1, y1, z1, psi, theta, phi, 0, 0, 0, lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
+
+		UE_LOG(LogClass, Log, TEXT("coreDS: Reconverted ENU %f, %f, %f"), x1, y1, z1);
+		*/
 
 		//The first argument is the object type, followed a unique identifier, then the values
-		UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Gun", lValues);
+		Engine->updateObject(GetFName().ToString(), "Gun", lValues);
 	}
-
-	//The first argument is the object type, followed a unique identifier, then the values
-	UcoreDSBluePrintBPLibrary::updateObject(GetFName().ToString(), "Gun", lValues);
 }
 
 void AFirstPersonShootCPPCharacter::Destroyed()
@@ -374,6 +404,6 @@ void AFirstPersonShootCPPCharacter::Destroyed()
 	// Delete it
 	if (!ActorHasTag("coreDSCreated"))
 	{
-		UcoreDSBluePrintBPLibrary::deleteObject(GetFName().ToString());
+		Engine->removeObject(TCHAR_TO_UTF8(*GetFName().ToString()));
 	}
 }
