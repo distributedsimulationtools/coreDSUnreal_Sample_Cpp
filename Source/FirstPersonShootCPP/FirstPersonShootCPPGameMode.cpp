@@ -52,6 +52,10 @@ AFirstPersonShootCPPGameMode::AFirstPersonShootCPPGameMode()
 	lSettings->SupportedInputObjects.AddUnique("Gun.Location.x");
 	lSettings->SupportedInputObjects.AddUnique("Gun.Location.y");
 	lSettings->SupportedInputObjects.AddUnique("Gun.Location.z");
+
+	//This needs to me mapped to articalted parts 
+	lSettings->SupportedInputObjects.AddUnique("Gun.Parts");
+
 	lSettings->SupportedInputObjects.AddUnique("Gun.Orientation.pitch");
 	lSettings->SupportedInputObjects.AddUnique("Gun.Orientation.yaw");
 	lSettings->SupportedInputObjects.AddUnique("Gun.Orientation.roll");
@@ -235,6 +239,7 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 			else
 			{
 				printErrorDelegate("Could not create actor", 0);
+				return;
 			}
 		}
 	}
@@ -248,6 +253,59 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 			//make sure the object is within the scene, otherwise it will get destroyed
 			lActor->SetActorLocationAndRotation(lNewLocation, lRot, false, nullptr, ETeleportType::ResetPhysics);
 		}
+		else
+		{
+			return;
+		}
+	}
+
+	//from here, we have a valid actor
+	if (Values.exists("Parts"))
+	{
+		unsigned int lNumberOfPats = Values["Parts"].size();
+
+		if (lNumberOfPats > 0)
+		{
+			for (size_t i = 0; i < lNumberOfPats; i++)
+			{
+				FCoreDSVariant lSinglePart = Values["Parts"][i];
+
+				//extract the values
+				lSinglePart["ParameterValue.Class"].toUInt8();
+				//For example, 3072 if for the Landing Gear
+
+				lSinglePart["ParameterValue.TypeMetric"].toUInt8();
+				/*0		Not Specified
+				1		Position
+				2		Position Rate
+				3		Extension
+				4		Extension Rate
+				5		X
+				6		X Rate
+				7		Y
+				8		Y Rate
+				9		Z
+				10		Z Rate
+				11		Azimuth
+				12		Azimuth Rate
+				13		Elevation
+				14		Elevation Rate
+				15		Rotation
+				16		Rotation Rate*/
+
+
+				//Actual value
+				lSinglePart["ParameterValue.Value"].toFloat();
+
+				//use them to set your actor's part
+				FString Message = FString::Printf(TEXT("coreDS: Received part Class: %i, Metric: %i, Value: %g"), lSinglePart["ParameterValue.Class"].toUInt16(),
+					lSinglePart["ParameterValue.TypeMetric"].toUInt16(), lSinglePart["ParameterValue.Value"].toFloat());
+
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, *Message);
+			}
+		}
+		//make sure we have valid parts
+		//Extract the value for each parts
 	}
 }
 

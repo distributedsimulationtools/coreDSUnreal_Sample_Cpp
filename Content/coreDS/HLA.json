@@ -50,11 +50,19 @@
       "MinimumCallbackTime" : 0.0,
       "ObjectPublishList" : [
          {
+            "Attributes" : [ "Spatial", "ArticulatedParametersArray" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity"
+         },
+         {
             "Attributes" : [ "Spatial" ],
             "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
          }
       ],
       "ObjectSubcribeList" : [
+         {
+            "Attributes" : [ "Spatial", "ArticulatedParametersArray" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity"
+         },
          {
             "Attributes" : [ "Spatial" ],
             "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
@@ -86,6 +94,9 @@
    },
    "ObjectLinkSimLocalIn" : [
       {
+         "HLAobjectRoot.BaseEntity.PhysicalEntity" : [ "Gun" ]
+      },
+      {
          "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [ "Gun" ]
       }
    ],
@@ -95,6 +106,36 @@
       }
    ],
    "ObjectMappingIn" : [
+      {
+         "HLAobjectRoot.BaseEntity.PhysicalEntity" : [
+            {
+               "HLAobjectRoot.BaseEntity.PhysicalEntity" : "Gun"
+            },
+            {
+               "ArticulatedParametersArray" : [
+                  {
+                     "ArticulatedParametersArray" : "Parts"
+                  }
+               ]
+            },
+            {
+               "HLAobjectRoot.BaseEntity.PhysicalEntity" : "Gun"
+            },
+            {
+               "Spatial" : [
+                  {
+                     "WorldLocation.X" : "Location.x"
+                  },
+                  {
+                     "WorldLocation.Y" : "Location.y"
+                  },
+                  {
+                     "WorldLocation.Z" : "Location.z"
+                  }
+               ]
+            }
+         ]
+      },
       {
          "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [
             {
@@ -163,5 +204,5 @@
       "Standard" : "1516e",
       "SystemVariables" : null
    },
-   "Version" : "3.0.217.Last_V1.5-187-gc0dd096e-dev"
+   "Version" : "3.0.227.Last_V1.5-197-g11fcfbd01-dev"
 }
