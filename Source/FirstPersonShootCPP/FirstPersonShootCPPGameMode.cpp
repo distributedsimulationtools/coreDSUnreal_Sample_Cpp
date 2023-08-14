@@ -81,17 +81,12 @@ void AFirstPersonShootCPPGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	Engine = GetGameInstance()->GetSubsystem<UcoreDSEngine>();
-
+		
+#if WITH_EDITOR
 	//Add a callback to be aware when a coreDS based entities is being deleted by Unreal
-	//GEngine->OnLevelActorDeleted().Add(&AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
-	//GEngine->OnLevelActorDeleted().Add(this, &AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
 	OnLevelActorDeletedHandle = GEngine->OnLevelActorDeleted().AddUObject(this, &AFirstPersonShootCPPGameMode::objectDeletedFromLevel);
-
-	// coreDS Unreal
-	Engine->connect();
-	
 	//create our delegates that will handle received informations from the distributed simulation backend
-
+#endif
 	//Error handler
 	FErrorReceivedHandler lErrorHandler;
 	lErrorHandler.BindUFunction(this, "printErrorDelegate");
@@ -232,9 +227,11 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 
 			if (IsValid(lActor))
 			{
+#if WITH_EDITOR
 				FString lFinaleName = ObjectName;
 				lFinaleName.Append(" (coreDS)");
 				lActor->SetActorLabel(lFinaleName);
+#endif
 			}
 			else
 			{
