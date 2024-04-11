@@ -4,8 +4,8 @@
 #include "FirstPersonShootCPPHUD.h"
 #include "FirstPersonShootCPPCharacter.h"
 #include "FirstPersonShootCPPProjectile.h"
-
 #include "UObject/ConstructorHelpers.h"
+#include "MathUtil.h"
 
 //coreDS Unreal
 #include "coreDSSettingsClass.h"
@@ -179,20 +179,30 @@ void  AFirstPersonShootCPPGameMode::spawnActorBasedOntype(TSubclassOf<AActor> Ac
 
 	//UE_LOG(LogClass, Log, TEXT("coreDS: Received position %g, %g, %g"), Values["Location.x"].toFloat(), Values["Location.y"].toFloat(), Values["Location.z"].toFloat());
 
-	float xEnu = 0, yEnu = 0, zEnu = 0;
-	float pitch = 0, roll = 0, yaw = 0;
+	double xEnu = 0, yEnu = 0, zEnu = 0;
+	double pitch = 0, roll = 0, yaw = 0;
 	UcoreDSSettings* lSettings = const_cast<UcoreDSSettings*>(GetDefault<UcoreDSSettings>());
-	UCoreDSCoordinateConversion::EcefToEnu_float(Values["Location.x"].toFloat(), Values["Location.y"].toFloat(), Values["Location.z"].toFloat(), 
-		xEnu, yEnu, zEnu, 
-		roll, pitch, yaw, 
-		lRot.Pitch, lRot.Roll, lRot.Yaw, 
-		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
+
+	UCoreDSCoordinateConversion::EcefToEnu(Values["Location.x"].toDouble(), Values["Location.y"].toDouble(), Values["Location.z"].toDouble(),
+		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude,
+		xEnu, yEnu, zEnu);
+
+	xEnu = xEnu / 100;
+	yEnu = yEnu / 100;
+	zEnu = zEnu / 100;
+
+	UCoreDSCoordinateConversion::EulerToHeadingPitchRoll(
+		lSettings->ReferenceLatitude * FMathd::DegToRad,
+		lSettings->ReferenceLongitude * FMathd::DegToRad,
+		Values["Orientation.pitch"].toDouble(), Values["Orientation.roll"].toDouble(), Values["Orientation.yaw"].toDouble(),
+		yaw, pitch, roll);
+
+	roll = roll * FMathd::RadToDeg;
+	pitch = pitch * FMathd::RadToDeg;
+	yaw = yaw * FMathd::RadToDeg;
 
 	lRot = FRotator(pitch, yaw, roll);
 	FVector lNewLocation(xEnu, yEnu, zEnu);
-
-	//UE_LOG(LogClass, Log, TEXT("coreDS: Converted location %g, %g, %g"), xEnu, yEnu, zEnu);
-
 
 	FTransform lTransform(lRot, lNewLocation);
 
@@ -328,10 +338,9 @@ void  AFirstPersonShootCPPGameMode::objectRemoved(FString ObjectName)
 		AActor *lActor = mDiscoveredObject[ObjectName];
 
 		//remove the object from the scene
-		if (lActor && lActor->IsValidLowLevel() || !lActor->IsActorBeingDestroyed() || !lActor->IsPendingKill() || !lActor->IsPendingKillOrUnreachable()
-			|| !lActor->IsPendingKillPending())
+		if (lActor && lActor->IsValidLowLevel() || !lActor->IsActorBeingDestroyed() || !lActor->IsPendingKillPending())
 		{
-			lActor->MarkPendingKill();
+			lActor->MarkAsGarbage();
 		}
 
 		mDiscoveredObject.Remove(ObjectName);

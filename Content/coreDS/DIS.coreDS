@@ -3,23 +3,27 @@
    "DISConfig" : {
       "AutomaticEntityStateUpdateManagement" : true,
       "DISAppNumber" : 3001,
-      "DISDestinationAddress" : "10.0.0.255",
+      "DISDestinationAddress" : "192.168.2.255",
       "DISDisVer" : 5,
       "DISEnableExpertMode" : true,
       "DISExerciseID" : 1,
       "DISJoinMulticastGroup" : false,
       "DISMulticastAddress" : "0.0.0.0",
-      "DISNIA" : "10.0.0.70",
+      "DISNIA" : "192.168.2.68",
       "DISPort" : 3000,
       "DISRcvBuffSize" : 2048,
       "DISSiteNumber" : 1,
+      "DISTimeStampFormat" : 0,
       "DISUseAsyncIO" : false,
+      "DropOutofSequencePacketAbsolute" : false,
+      "DropOutofSequencePacketEntity" : false,
       "EntityStatePDUUpdateFrequency" : 1,
       "KeepAliveTimeout" : 5,
       "SendCompleteEntityStatePDUPeriodically" : true,
       "UseESUForKeepAlive" : true
    },
    "Federate" : {
+      "AutoAchieveSyncPoints" : false,
       "CallbackReportingLevel" : 1,
       "CallbacksToLog" : false,
       "CreateFederationExecution" : true,
@@ -31,7 +35,7 @@
       "EnableTimeConstrained" : false,
       "EnableTimeRegulation" : false,
       "FOMFileList" : [
-         "C:\\Program Files\\Epic Games\\UE_5.1\\Engine\\Plugins\\Marketplace\\Binaries\\Win64\\\\DIS_V5_IEEE_1278.1-1995_expert.xml"
+         "C:\\code\\ds.tools_git\\coreDSUnreal\\Samples\\coreDSUnreal_Sample_Cpp\\Plugins\\Marketplace\\coreDS\\Binaries\\Win64\\\\DIS_V5_IEEE_1278.1-1995_expert.xml"
       ],
       "FederateName" : "",
       "FederateType" : "",
@@ -869,7 +873,7 @@
    ],
    "RTIConfiguration" : {
       "Compiler" : "DLC",
-      "DLLName" : "DLC_DIS-V5.dll",
+      "DLLName" : "DLC_DIS-V5",
       "LocalDesignatorsExtra" : "",
       "Manufacturer" : "",
       "OverEncDecFOM" : "",
@@ -877,5 +881,5 @@
       "Standard" : "DIS V5",
       "SystemVariables" : null
    },
-   "Version" : "3.0.217.Last_V1.5-187-gc0dd096e-dev"
+   "Version" : "3.0.351-dev"
 }

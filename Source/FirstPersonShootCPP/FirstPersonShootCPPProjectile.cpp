@@ -78,14 +78,12 @@ void AFirstPersonShootCPPProjectile::Tick(float DeltaTime)
 	FVector ActorLocation = GetRootComponent()->GetComponentLocation();
 	FRotator ActorRotation = GetRootComponent()->GetComponentRotation();
 
-	float x = 0, y = 0, z = 0;
-	float psi = 0, theta = 0, phi = 0;
+	double x = 0, y = 0, z = 0;
+	double psi = 0, theta = 0, phi = 0;
 	UcoreDSSettings* lSettings = const_cast<UcoreDSSettings*>(GetDefault<UcoreDSSettings>());
-	UCoreDSCoordinateConversion::EnuToEcef_float(ActorLocation.X, ActorLocation.Y, ActorLocation.Z,
-		x, y, z,
-		psi, theta, phi,
-		ActorRotation.Roll, ActorRotation.Pitch, ActorRotation.Yaw,
-		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude);
+	UCoreDSCoordinateConversion::EnuToEcef(ActorLocation.X * 100, ActorLocation.Y * 100, ActorLocation.Z * 100,
+		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude,
+		x, y, z);
 
 	lValues.Add(FKeyVariantPair("Location.x", x));
 	lValues.Add(FKeyVariantPair("Location.y", y));
