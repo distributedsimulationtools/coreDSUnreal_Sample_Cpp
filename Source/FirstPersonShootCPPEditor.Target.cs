@@ -8,7 +8,8 @@ public class FirstPersonShootCPPEditorTarget : TargetRules
 	public FirstPersonShootCPPEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("FirstPersonShootCPP");
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+        ExtraModuleNames.Add("FirstPersonShootCPP");
     }
 }

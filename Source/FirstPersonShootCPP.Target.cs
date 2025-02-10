@@ -8,7 +8,8 @@ public class FirstPersonShootCPPTarget : TargetRules
 	public FirstPersonShootCPPTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("FirstPersonShootCPP");
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+        ExtraModuleNames.Add("FirstPersonShootCPP");
     }
 }
