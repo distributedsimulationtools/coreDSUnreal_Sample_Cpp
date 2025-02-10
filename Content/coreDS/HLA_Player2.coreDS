@@ -1,0 +1,188 @@
+{
+   "ConfigType" : 0,
+   "DISConfig" : {
+      "AutomaticEntityStateUpdateManagement" : true,
+      "DISAppNumber" : 3001,
+      "DISDestinationAddress" : "0.0.0.0",
+      "DISDisVer" : 7,
+      "DISEnableExpertMode" : false,
+      "DISExerciseID" : 1,
+      "DISJoinMulticastGroup" : false,
+      "DISMulticastAddress" : "224.0.0.1",
+      "DISNIA" : "0.0.0.0",
+      "DISPort" : 3000,
+      "DISRcvBuffSize" : 2048,
+      "DISSiteNumber" : 1,
+      "DISTimeStampFormat" : 0,
+      "DISUseAsyncIO" : false,
+      "DropOutofSequencePacketAbsolute" : false,
+      "DropOutofSequencePacketEntity" : false,
+      "EntityStatePDUUpdateFrequency" : 5,
+      "KeepAliveTimeout" : 5,
+      "SendCompleteEntityStatePDUPeriodically" : false,
+      "UseESUForKeepAlive" : false
+   },
+   "Federate" : {
+      "AutoAchieveSyncPoints" : false,
+      "CallbackReportingLevel" : 1,
+      "CallbacksToLog" : false,
+      "CreateFederationExecution" : true,
+      "DeleteFederationExecution" : true,
+      "DiscoverEverything" : false,
+      "EnableAsynchronousDelivery" : false,
+      "EnableProvideAttributeValues" : false,
+      "EnableSynchronization" : false,
+      "EnableTimeConstrained" : false,
+      "EnableTimeRegulation" : false,
+      "FOMFileList" : [
+         "RPR_v2.0.xml"
+      ],
+      "FederateName" : "Player2",
+      "FederateType" : "Player2",
+      "FederationName" : "Federation",
+      "HLACallbackDeliveryMecanism" : "HLA_EVOKED",
+      "LogToFile" : {
+         "Destination" : "",
+         "Enabled" : false,
+         "Filter" : "%Severity% >= error",
+         "MaxVerbose" : "%Severity% >= error"
+      },
+      "LogicalTimeImplementationName" : "Double",
+      "LookAhead" : 0.10,
+      "MIMmodule" : "",
+      "MaximumCallbackTime" : 0.10,
+      "MinimumCallbackTime" : 0.0,
+      "ObjectPublishList" : [
+         {
+            "Attributes" : [ "Spatial", "ArticulatedParametersArray" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity"
+         },
+         {
+            "Attributes" : [ "Spatial" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+         }
+      ],
+      "ObjectSubcribeList" : [
+         {
+            "Attributes" : [ "Spatial", "ArticulatedParametersArray" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity"
+         },
+         {
+            "Attributes" : [ "Spatial" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+         }
+      ],
+      "OptionalFOMFileList" : null,
+      "RegisterSynchronizationPoint" : false,
+      "RequestAttributeValuesUpdate" : true,
+      "ResignAction" : "Delete Objects",
+      "StartAtGALT" : false,
+      "SynchronizationPointName" : "SyncPoint",
+      "TimeStep" : 1.0
+   },
+   "Metadata" : {
+      "FedInfoAppDom" : "",
+      "FedInfoMOMVer" : "",
+      "FedInfoModDate" : "",
+      "FedInfoName" : "",
+      "FedInfoPurposes" : "",
+      "FedInfoSponsor" : "",
+      "FedInfoType" : "",
+      "FedInfoVersion" : "",
+      "POCEmail" : "",
+      "POCFirstName" : "",
+      "POCHonorName" : "",
+      "POCLastName" : "",
+      "POCOrganisationName" : "",
+      "POCPhoneNumber" : ""
+   },
+   "ObjectLinkSimLocalIn" : [
+      {
+         "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [ "Gun" ]
+      }
+   ],
+   "ObjectLinkSimLocalOut" : [
+      {
+         "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+      }
+   ],
+   "ObjectMappingIn" : [
+      {
+         "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [
+            {
+               "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : "Gun"
+            },
+            {
+               "Spatial" : [
+                  {
+                     "Orientation.Phi" : "Orientation.yaw"
+                  },
+                  {
+                     "Orientation.Psi" : "Orientation.pitch"
+                  },
+                  {
+                     "Orientation.Theta" : "Orientation.roll"
+                  },
+                  {
+                     "WorldLocation.X" : "Location.x"
+                  },
+                  {
+                     "WorldLocation.Y" : "Location.y"
+                  },
+                  {
+                     "WorldLocation.Z" : "Location.z"
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+   "ObjectMappingOut" : [
+      {
+         "Gun" : [
+            {
+               "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+            },
+            {
+               "Spatial" : [
+                  {
+                     "DeadReckoningAlgorithm" : 1
+                  },
+                  {
+                     "IsFrozen" : 0
+                  },
+                  {
+                     "Orientation.Phi" : "Orientation.yaw"
+                  },
+                  {
+                     "Orientation.Psi" : "Orientation.pitch"
+                  },
+                  {
+                     "Orientation.Theta" : "Orientation.roll"
+                  },
+                  {
+                     "WorldLocation.X" : "Location.x"
+                  },
+                  {
+                     "WorldLocation.Y" : "Location.y"
+                  },
+                  {
+                     "WorldLocation.Z" : "Location.z"
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+   "RTIConfiguration" : {
+      "Compiler" : "VC142",
+      "DLLName" : "Mak_1516e_VC142_x64",
+      "LocalDesignatorsExtra" : "",
+      "Manufacturer" : "Mak",
+      "OverEncDecFOM" : "",
+      "RTILibPath" : "",
+      "Standard" : "1516e",
+      "SystemVariables" : null
+   },
+   "Version" : "3.0.512-dev"
+}

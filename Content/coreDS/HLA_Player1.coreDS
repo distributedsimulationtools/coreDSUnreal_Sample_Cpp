@@ -3,8 +3,8 @@
    "DISConfig" : {
       "AutomaticEntityStateUpdateManagement" : true,
       "DISAppNumber" : 3001,
-      "DISDestinationAddress" : "0.0.0.255",
-      "DISDisVer" : 5,
+      "DISDestinationAddress" : "0.0.0.0",
+      "DISDisVer" : 7,
       "DISEnableExpertMode" : false,
       "DISExerciseID" : 1,
       "DISJoinMulticastGroup" : false,
@@ -13,13 +13,17 @@
       "DISPort" : 3000,
       "DISRcvBuffSize" : 2048,
       "DISSiteNumber" : 1,
+      "DISTimeStampFormat" : 0,
       "DISUseAsyncIO" : false,
+      "DropOutofSequencePacketAbsolute" : false,
+      "DropOutofSequencePacketEntity" : false,
       "EntityStatePDUUpdateFrequency" : 5,
       "KeepAliveTimeout" : 5,
       "SendCompleteEntityStatePDUPeriodically" : false,
       "UseESUForKeepAlive" : false
    },
    "Federate" : {
+      "AutoAchieveSyncPoints" : false,
       "CallbackReportingLevel" : 1,
       "CallbacksToLog" : false,
       "CreateFederationExecution" : true,
@@ -31,7 +35,7 @@
       "EnableTimeConstrained" : false,
       "EnableTimeRegulation" : false,
       "FOMFileList" : [
-         "C:\\code\\ds.tools_git\\Github Public Samples\\coreUnrealCpp\\Config\\RPR_v2.0.xml"
+         "RPR_v2.0.xml"
       ],
       "FederateName" : "Player1",
       "FederateType" : "Player1",
@@ -39,7 +43,7 @@
       "HLACallbackDeliveryMecanism" : "HLA_EVOKED",
       "LogToFile" : {
          "Destination" : "",
-         "Enabled" : 0,
+         "Enabled" : false,
          "Filter" : "%Severity% >= error",
          "MaxVerbose" : "%Severity% >= error"
       },
@@ -94,9 +98,6 @@
    },
    "ObjectLinkSimLocalIn" : [
       {
-         "HLAobjectRoot.BaseEntity.PhysicalEntity" : [ "Gun" ]
-      },
-      {
          "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [ "Gun" ]
       }
    ],
@@ -107,42 +108,21 @@
    ],
    "ObjectMappingIn" : [
       {
-         "HLAobjectRoot.BaseEntity.PhysicalEntity" : [
-            {
-               "HLAobjectRoot.BaseEntity.PhysicalEntity" : "Gun"
-            },
-            {
-               "ArticulatedParametersArray" : [
-                  {
-                     "ArticulatedParametersArray" : "Parts"
-                  }
-               ]
-            },
-            {
-               "HLAobjectRoot.BaseEntity.PhysicalEntity" : "Gun"
-            },
-            {
-               "Spatial" : [
-                  {
-                     "WorldLocation.X" : "Location.x"
-                  },
-                  {
-                     "WorldLocation.Y" : "Location.y"
-                  },
-                  {
-                     "WorldLocation.Z" : "Location.z"
-                  }
-               ]
-            }
-         ]
-      },
-      {
          "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [
             {
                "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : "Gun"
             },
             {
                "Spatial" : [
+                  {
+                     "Orientation.Phi" : "Orientation.yaw"
+                  },
+                  {
+                     "Orientation.Psi" : "Orientation.pitch"
+                  },
+                  {
+                     "Orientation.Theta" : "Orientation.roll"
+                  },
                   {
                      "WorldLocation.X" : "Location.x"
                   },
@@ -172,13 +152,13 @@
                      "IsFrozen" : 0
                   },
                   {
-                     "Orientation.Phi" : 0.0
+                     "Orientation.Phi" : "Orientation.yaw"
                   },
                   {
-                     "Orientation.Psi" : 0.0
+                     "Orientation.Psi" : "Orientation.pitch"
                   },
                   {
-                     "Orientation.Theta" : 0.0
+                     "Orientation.Theta" : "Orientation.roll"
                   },
                   {
                      "WorldLocation.X" : "Location.x"
@@ -196,13 +176,13 @@
    ],
    "RTIConfiguration" : {
       "Compiler" : "VC142",
-      "DLLName" : "Pitch_1516e_VC142_x64.dll",
+      "DLLName" : "Mak_1516e_VC142_x64",
       "LocalDesignatorsExtra" : "",
-      "Manufacturer" : "Pitch",
+      "Manufacturer" : "Mak",
       "OverEncDecFOM" : "",
       "RTILibPath" : "",
       "Standard" : "1516e",
       "SystemVariables" : null
    },
-   "Version" : "3.0.227.Last_V1.5-197-g11fcfbd01-dev"
+   "Version" : "3.0.512-dev"
 }
