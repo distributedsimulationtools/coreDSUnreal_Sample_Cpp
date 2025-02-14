@@ -15,5 +15,8 @@
 			"Name": "coreDSModule",
 			"Enabled": true
 		}
+	],
+	"TargetPlatforms": [
+		"Windows"
 	]
 }
