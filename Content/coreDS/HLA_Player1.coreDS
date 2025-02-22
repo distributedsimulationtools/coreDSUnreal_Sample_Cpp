@@ -35,7 +35,7 @@
       "EnableTimeConstrained" : false,
       "EnableTimeRegulation" : false,
       "FOMFileList" : [
-         "RPR_v2.0.xml"
+         "C:\\code\\ds.tools_git\\coreDSUnreal\\Samples\\coreDSUnreal_Sample_Cpp\\Content\\coreDS\\RPR_v2.0.xml"
       ],
       "FederateName" : "Player1",
       "FederateType" : "Player1",
@@ -54,22 +54,22 @@
       "MinimumCallbackTime" : 0.0,
       "ObjectPublishList" : [
          {
-            "Attributes" : [ "Spatial", "ArticulatedParametersArray" ],
-            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity"
+            "Attributes" : [ "Spatial" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
          },
          {
             "Attributes" : [ "Spatial" ],
-            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
          }
       ],
       "ObjectSubcribeList" : [
          {
-            "Attributes" : [ "Spatial", "ArticulatedParametersArray" ],
-            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity"
+            "Attributes" : [ "Spatial" ],
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
          },
          {
             "Attributes" : [ "Spatial" ],
-            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
+            "Object" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
          }
       ],
       "OptionalFOMFileList" : null,
@@ -99,9 +99,15 @@
    "ObjectLinkSimLocalIn" : [
       {
          "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human" : [ "Gun" ]
+      },
+      {
+         "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition" : [ "Bullet" ]
       }
    ],
    "ObjectLinkSimLocalOut" : [
+      {
+         "Bullet" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
+      },
       {
          "Gun" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Lifeform.Human"
       }
@@ -135,9 +141,64 @@
                ]
             }
          ]
+      },
+      {
+         "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition" : [
+            {
+               "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition" : "Bullet"
+            },
+            {
+               "Spatial" : [
+                  {
+                     "WorldLocation.X" : "Location.x"
+                  },
+                  {
+                     "WorldLocation.Y" : "Location.y"
+                  },
+                  {
+                     "WorldLocation.Z" : "Location.z"
+                  }
+               ]
+            }
+         ]
       }
    ],
    "ObjectMappingOut" : [
+      {
+         "Bullet" : [
+            {
+               "Bullet" : "HLAobjectRoot.BaseEntity.PhysicalEntity.Munition"
+            },
+            {
+               "Spatial" : [
+                  {
+                     "DeadReckoningAlgorithm" : 1
+                  },
+                  {
+                     "IsFrozen" : 0
+                  },
+                  {
+                     "Orientation.Phi" : 0.0
+                  },
+                  {
+                     "Orientation.Psi" : 0.0
+                  },
+                  {
+                     "Orientation.Theta" : 0.0
+                  },
+                  {
+                     "WorldLocation.X" : "Location.x"
+                  },
+                  {
+                     "WorldLocation.Y" : "Location.y"
+                  },
+                  {
+                     "WorldLocation.Z" : "Location.z"
+                  }
+               ]
+            }
+         ]
+      },
       {
          "Gun" : [
             {
