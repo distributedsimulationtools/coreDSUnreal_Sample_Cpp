@@ -339,6 +339,6 @@ void AFirstPersonShootCPPCharacter::Destroyed()
 	// Delete it
 	if (!ActorHasTag("coreDSCreated"))
 	{
-		Engine->removeObject(TCHAR_TO_UTF8(*GetFName().ToString()));
+		Engine->deleteObject(TCHAR_TO_UTF8(*GetFName().ToString()));
 	}
 }

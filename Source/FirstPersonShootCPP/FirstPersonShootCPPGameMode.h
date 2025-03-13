@@ -6,7 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 
 //coreDS Unreal
-#include "coreDSBluePrintBPLibrary.h"
 #include "coreDS_BPVariant.h"
 
 #include "FirstPersonShootCPPGameMode.generated.h"
