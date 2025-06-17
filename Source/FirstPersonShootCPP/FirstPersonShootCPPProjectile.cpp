@@ -73,7 +73,7 @@ void AFirstPersonShootCPPProjectile::Tick(float DeltaTime)
 
 	//coreDS Unreal
 	//Send a message on hit
-	TArray< FKeyVariantPair > lValues;
+	CVariant lValues;
 
 	FVector ActorLocation = GetRootComponent()->GetComponentLocation();
 	FRotator ActorRotation = GetRootComponent()->GetComponentRotation();
@@ -85,9 +85,9 @@ void AFirstPersonShootCPPProjectile::Tick(float DeltaTime)
 		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude,
 		x, y, z);
 
-	lValues.Add(FKeyVariantPair("Location.x", x));
-	lValues.Add(FKeyVariantPair("Location.y", y));
-	lValues.Add(FKeyVariantPair("Location.z", z));
+	lValues["Location.x"] = x;
+	lValues["Location.y"] = y;
+	lValues["Location.z"] = z;
 
 	//The first argument is the object type, followed a unique identifier, then the values
 	Engine->updateObject(GetFName().ToString(), "Bullet", lValues);

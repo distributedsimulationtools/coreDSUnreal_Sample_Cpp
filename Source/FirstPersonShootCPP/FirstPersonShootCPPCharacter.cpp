@@ -154,7 +154,7 @@ void AFirstPersonShootCPPCharacter::OnFire()
 
 	//coreDS Unreal
 	//Send a message on hit
-	TArray< FKeyVariantPair > lValues;
+	CVariant lValues;
 	FVector ActorLocation;
 
 	const FRotator SpawnRotation = GetControlRotation();
@@ -167,9 +167,9 @@ void AFirstPersonShootCPPCharacter::OnFire()
 		lSettings->ReferenceLatitude, lSettings->ReferenceLongitude, lSettings->ReferenceAltitude,
 		x, y, z);
 
-	lValues.Add(FKeyVariantPair("Location.x", x));
-	lValues.Add(FKeyVariantPair("Location.y", y));
-	lValues.Add(FKeyVariantPair("Location.z", z));
+	lValues["Location.x"] = x;
+	lValues["Location.y"] = y;
+	lValues["Location.z"] = z;
 
 	Engine->sendMessage("ShotFired", lValues);
 }
@@ -294,7 +294,7 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 
 	//coreDS Unreal
 	//Send a message on hit
-	TArray< FKeyVariantPair > lValues;
+	CVariant lValues;
 
 	FVector ActorLocation = GetActorLocation();
 	//FRotator ActorRotation = GetActorRotation();
@@ -320,13 +320,13 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 			ActorRotation.Yaw * FMathd::DegToRad, ActorRotation.Pitch * FMathd::DegToRad, ActorRotation.Roll * FMathd::DegToRad,
 			psi, theta, phi);
 
-		lValues.Add(FKeyVariantPair("Location.x", x));
-		lValues.Add(FKeyVariantPair("Location.y", y));
-		lValues.Add(FKeyVariantPair("Location.z", z));
+		lValues["Location.x"] = x;
+		lValues["Location.y"] = y;
+		lValues["Location.z"] = z;
 
-		lValues.Add(FKeyVariantPair("Orientation.pitch", psi));
-		lValues.Add(FKeyVariantPair("Orientation.yaw", phi));
-		lValues.Add(FKeyVariantPair("Orientation.roll", theta));
+		lValues["Orientation.pitch"] = psi;
+		lValues["Orientation.yaw"] = phi;
+		lValues["Orientation.roll"] = theta;
 
 		//The first argument is the object type, followed a unique identifier, then the values
 		Engine->updateObject(GetFName().ToString(), "Gun", lValues);

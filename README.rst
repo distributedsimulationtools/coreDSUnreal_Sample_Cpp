@@ -21,15 +21,16 @@ Getting started
 
 First, you need to add the required modules to your application. This is done in the FirstPersonShootCPP.build.cs and addingcoreDSActorComponentModule and coreDSSettings to the PublicDependencyModuleNames array.
 
-.. code-block:: c#
+.. code-block:: csharp
 
    PublicDependencyModuleNames.AddRange(new string[] { 
-   “Core”,
-   “CoreUObject”,
-   “Engine”,
-   “InputCore”,
-   “coreDSActorComponentModule”,
-   “coreDSSettings” });
+      "Core",
+      "CoreUObject",
+      "Engine",
+      "InputCore",
+      "coreDSActorComponentModule",
+      "coreDSSettings"
+   });
 
 You must also add the “coreDSModule” to your .uproject file.
 
