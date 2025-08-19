@@ -329,7 +329,7 @@ void AFirstPersonShootCPPCharacter::TickActor(float DeltaTime, enum ELevelTick T
 		lValues["Orientation.roll"] = theta;
 
 		//The first argument is the object type, followed a unique identifier, then the values
-		Engine->updateObject(GetFName().ToString(), "Gun", lValues);
+		if (Engine) Engine->updateObject(GetFName().ToString(), "Gun", lValues);
 	}
 }
 
@@ -339,6 +339,6 @@ void AFirstPersonShootCPPCharacter::Destroyed()
 	// Delete it
 	if (!ActorHasTag("coreDSCreated"))
 	{
-		Engine->deleteObject(TCHAR_TO_UTF8(*GetFName().ToString()));
+		if (Engine) Engine->deleteObject(TCHAR_TO_UTF8(*GetFName().ToString()));
 	}
 }
