@@ -38,9 +38,9 @@ Most functions are included in these header files
 
 .. code-block:: cpp
 
-   #include “coreDSSettingsClass.h”
-   #include “coreDSBluePrintBPLibrary.h”
-   #include “coreDSEngine.h”
+   #include "coreDSSettingsClass.h"
+   #include "coreDSBluePrintBPLibrary.h"
+   #include "coreDSEngine.h"
 
 The first step is to configure coreDS Unreal to know which objects, object attributes, messages and message parameters your simulator will support. Keep in mind that the names you define are not related to the distributed simulation protocol you plan on using. These names will only be used internally when using BluePrint or the Mapping interface.
 
